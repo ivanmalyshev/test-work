@@ -1,0 +1,63 @@
+- hosts: all
+  become: yes
+  tasks: 
+   - name: Install prerequisites
+     apt: name={{ item }} update_cache=yes state=latest force_apt_get=yes
+     loop: [ 'aptitude' ]
+#Install package
+   - name: Install package
+     apt: name={{ item }} update_cache=yes state=latest
+     loop: [ 'vim', 'wget', 'htop', 'nginx', 'apache2', 'net-tools' ] 
+   - name: copy script on nodes #Загружаю ports.conf
+     become: true
+     copy:
+       src: ./ports.conf
+       dest: /etc/apache2
+       owner: root
+       group: root
+       mode: 0644
+   - name: copy script php 5.6 
+     become: true
+     copy:
+       src: ./calc.php #тестовая страничка калькулятора на php
+       dest: /var/www/html
+       owner: root
+       group: root
+       mode: 0644
+   - name: copy script on nodes #Загружаю скрипт для установки на ноды
+     become: true
+     copy:
+       src: ./install_php5.sh
+       dest: /home/vagrant
+       owner: root
+       group: root
+       mode: 0644
+   - name: copy script on nodes ##далее в браузере можно посмотреть информацию о версии php и модулях через http://192.168.88.253:8888/t.php
+     become: true
+     copy:
+       src: ./t.php
+       dest: /var/www/html
+       owner: root
+       group: root
+       mode: 0644
+   - name: run sh script
+     ansible.builtin.command: bash /home/vagrant/install_php5.sh
+   - name: restart apache2 #рестарт апача
+     ansible.builtin.shell:
+       cmd: service apache2 restart
+   - name: status apache2 #выводим статус сервиса в консоль для отладки
+     ansible.builtin.shell:
+       cmd: service apache2 status
+     register: cmd
+   - debug: msg="{{ cmd }}" 
+   - name: status ports #смотрим вывод портов для nginx/apache
+     ansible.builtin.shell:
+       cmd: sudo netstat -tulnp | grep -E 'apache|nginx'
+     register: cmd
+   - debug: msg="{{ cmd }}" 
+   - name: status ports #смотрим вывод версии php
+     ansible.builtin.shell:
+       cmd: php -v
+     register: cmd
+   - debug: msg="{{ cmd }}" 
+

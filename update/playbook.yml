@@ -1,0 +1,16 @@
+- hosts: all
+  become: yes
+  tasks: 
+   - name: Remove php5.6
+     ansible.builtin.apt:
+       name: php5.6
+       state: absent
+   - name: install php7.2
+     ansible.builtin.apt:
+       name: php7.2
+       state: present
+   - name: status php #выводим статус в консоль для отладки
+     ansible.builtin.shell:
+       cmd: php -v
+     register: cmd
+   - debug: msg="{{ cmd }}"
