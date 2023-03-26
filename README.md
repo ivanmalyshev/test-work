@@ -29,5 +29,5 @@
 ```
 ## 5. playbook для обновления php до 7.2 расположен в директории ./update/playbook.yaml
 
-запускается через vagrant provisioner, требуется разкомментировать нужный плейбук в Vagrantfile
+запускается через vagrant provisioner, требуется раcкомментировать нужный плейбук в Vagrantfile
 
