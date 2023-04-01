@@ -1,5 +1,5 @@
 #парочка переменных для конфига.
-HOME_DISK="/media/mid/storage4/VirtualBox/disk1.vdi"
+#HOME_DISK="/media/mid/storage4/VirtualBox/disk1.vdi"
 IP_VM="192.168.88.24" 
 
 Vagrant.configure("2") do |config|
@@ -19,28 +19,28 @@ config.vm.provider "virtualbox" do |vb|
 #с какого-либо образа - все равно будет использоваться диск который был в этом снимке. Так и не удалось победить. 
 #выше закомментирована версия 9 дебиана, которая выкатывается в диск размером 10 гб, далее с v9.9.1 этот момент исправили на 20gb
 #ссылка на источник https://app.vagrantup.com/debian/boxes/stretch64	
-			vb.customize ['createhd',
-			                    '--filename', HOME_DISK,
-					    '--format', 'vdi',
-					    '--size', 10240]
-
-				vb.customize ['storageattach', :id,
-			                    '--storagectl', 'SATA Controller',
-			                    '--port', 1,
-			                    '--device', 0,
-			                    '--type', 'hdd',
-			                    '--medium', HOME_DISK]
+#			vb.customize ['createhd',
+#			                    '--filename', HOME_DISK,
+#					    '--format', 'vdi',
+#					    '--size', 10240]
+#
+#				vb.customize ['storageattach', :id,
+#			                    '--storagectl', 'SATA Controller',
+#			                    '--port', 1,
+#			                    '--device', 0,
+#			                    '--type', 'hdd',
+#			                    '--medium', HOME_DISK]
 
  end
  
  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook.yml"
+#    ansible.playbook = "playbook.yml"
 
 
 ################################################################################################
 ###Для обновления php до версии 7.2 расскоментировать и применить командой vagrant provision####
 #                                                                                              #
-#ansible.playbook = "update/playbook.yml"                                                      
+ansible.playbook = "update/playbook.yml"                                                      
 ################################################################################################   
  end
 end
